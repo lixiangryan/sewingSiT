@@ -1,0 +1,17 @@
+name: sewingSiT
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - python=3.10
+  - pytorch
+  - torchvision
+  - pytorch-cuda=12.4
+  - pip
+  - pip:
+    - timm
+    - diffusers
+    - accelerate
+    - torchdiffeq
+    - wandb
