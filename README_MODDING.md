@@ -48,14 +48,64 @@ python scripts/preprocess_data.py --data_dir data/raw_images --output_dir data/p
 
 ## 訓練 (Training)
 
-我們提供了一個精簡版的訓練腳本 `scripts/train_simple.py` 來驗證「載入資料 -> 模型運算 -> 計算 Loss -> 反向傳播」的完整流程。
+我們提供了兩個版本的訓練腳本：
 
-### 執行測試訓練
+### 1. 基礎驗證 (`train_simple.py`)
+驗證「載入資料 -> 模型運算 -> 計算 MSE Loss -> 反向傳播」的完整流程。
 ```bash
 python scripts/train_simple.py
 ```
-此腳本會：
-1.  讀取 `data/processed` 中的 `.npz` 訓練資料。
-2.  初始化 `SiT-B/2` 文字條件模型。
-3.  執行 5 個 Epoch 的模擬訓練。
-4.  將權重儲存至 `checkpoints/sit_text_test.pt`。
+
+### 2. 進階訓練 (`train_transport.py`)
+整合 SiT 核心的 **Transport (Rectified Flow / Velocity Matching)** 機制與 **WandB** 監控。這是訓練 SOTA 生成模型的標準配置。
+```bash
+# 測試執行
+python scripts/train_transport.py --epochs 5
+
+# 正式訓練 (需登入 WandB)
+python scripts/train_transport.py --use_wandb --run_name "sewing-sit-v1"
+```
+
+## COCO Dataset Workflow
+
+如果您下載了 MS-COCO 資料集，可使用專用腳本進行處理：
+
+1.  **下載資料**:
+    ```bash
+    python scripts/download_coco.py --target_dir /mnt/f/nccu/project/data/2dImg --split test_small
+    ```
+2.  **解壓縮** (腳本會自動處理，或手動解壓至 `.../val2017` 等)。
+3.  **預處理** (影像轉 Latents, 文字轉 Embeddings):
+    ```bash
+    python scripts/process_coco.py \
+      --img_dir /mnt/f/nccu/project/data/2dImg/val2017 \
+      --ann_file /mnt/f/nccu/project/data/2dImg/annotations/captions_val2017.json \
+      --output_dir /mnt/f/nccu/project/data/2dImg/processed_val \
+      --size 256
+    ```
+4.  **訓練** (使用真實資料):
+    ```bash
+    python scripts/train_transport.py \
+      --data_dir /mnt/f/nccu/project/data/2dImg/processed_val \
+      --epochs 50 \
+      --batch_size 32 \
+      --use_wandb \
+      --run_name "coco-val-256-test"
+    ```
+
+5.  **生成測試 (Sampling)**:
+    ```bash
+    python scripts/sample.py \
+      --checkpoint checkpoints/run001-coco-val-32.pt \
+      --prompt "A red sports car" \
+      --latent_size 32
+    ```
+    *   生成的圖片會存在 `output/` 資料夾中。
+    *   *注意：由於目前僅使用少量驗證集 (5k images) 進行短期訓練，生成結果可能較為抽象，主要用於驗證程式碼流程是否打通。*
+
+## 未來工作 (Future Work)
+1.  **擴充資料規模**: 改用 MS-COCO 完整訓練集 (118k images) 或 Laion-400M 等大規模資料集。
+2.  **增加訓練時長**: 文生圖模型通常需要長時間訓練 (如 100+ epochs) 才能看到清晰語義。
+3.  **解析度提升**: 將訓練解析度提升回 512 或 1024。
+4.  **雙 Text Encoder**: 參考 SDXL/SSD-1B，同時引入 OpenCLIP ViT-bigG 與 CLIP ViT-L，增強對提示詞的理解能力。
+5.  **模型規模擴展**: 嘗試訓練更大的 `SiT-XL/2` (參數量類似 DiT-XL) 以獲得更好的生成品質。

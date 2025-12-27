@@ -8,7 +8,7 @@ my_env/
 venv/
 env/
 data/
-checkpoints/
+
 **/*.npz
 **/*.pt
 **/*.safetensors
