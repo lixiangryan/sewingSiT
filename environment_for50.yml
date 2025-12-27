@@ -16,3 +16,5 @@ dependencies:
     - torchdiffeq
     - wandb
     - transformers
+    - mkl <2025
+    - mkl-include <2025
