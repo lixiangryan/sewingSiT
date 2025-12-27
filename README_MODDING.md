@@ -33,13 +33,13 @@ conda activate sewingSiT_50
 
 ```bash
 # 1. 下載 COCO Val2017
-python scripts/download_coco.py --target_dir /mnt/f/nccu/project/data/2dImg --split test_small
+python scripts/download_coco.py --target_dir /mnt/f/nccu/project/data/2dImg/coco_2017 --split test_small
 
 # 2. 預處理 (圖片尺寸 256x256 -> Latent 32x32)
 python scripts/process_coco.py \
-  --img_dir /mnt/f/nccu/project/data/2dImg/val2017 \
-  --ann_file /mnt/f/nccu/project/data/2dImg/annotations/captions_val2017.json \
-  --output_dir /mnt/f/nccu/project/data/2dImg/processed_val \
+  --img_dir /mnt/f/nccu/project/data/2dImg/coco_2017/val2017 \
+  --ann_file /mnt/f/nccu/project/data/2dImg/coco_2017/annotations/captions_val2017.json \
+  --output_dir /mnt/f/nccu/project/data/2dImg/coco_2017/processed_val \
   --size 256
 ```
 
@@ -48,7 +48,7 @@ python scripts/process_coco.py \
 
 ```bash
 python scripts/train_transport.py \
-  --data_dir /mnt/f/nccu/project/data/2dImg/processed_val \
+  --data_dir /mnt/f/nccu/project/data/2dImg/coco_2017/processed_val \
   --epochs 10 \
   --batch_size 32 \
   --img_size 32 \
