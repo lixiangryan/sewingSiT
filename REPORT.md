@@ -107,31 +107,31 @@ graph TD
         direction TB
         style Sewing_SiT fill:#e1f5fe,stroke:#01579b,stroke-width:2px
         
-        Input_Noise[Input Noise (Latent)] --> Patch_Embed[PatchEmbed]
+        Input_Noise["Input Noise (Latent)"] --> Patch_Embed[PatchEmbed]
         Text_Prompt[Text Prompt] -->|Pre-computed| CLIP[CLIP ViT-L/14]
-        CLIP --> Text_Context[Text Context (N, 77, 768)]
+        CLIP --> Text_Context["Text Context (N, 77, 768)"]
         
         Time_Step[Timestep t] --> Time_Emb[TimestepEmbedder]
-        Time_Emb --> Ada_Cond[adaLN Condition c]
+        Time_Emb --> Ada_Cond["adaLN Condition c"]
         
         Patch_Embed --> Block_In
         
         subgraph Modified_Block [Modified SiT Block]
             style Modified_Block fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
             
-            Block_Input[Input x] --> Norm_1[Norm1 (adaLN)]
+            Block_Input[Input x] --> Norm_1["Norm1 (adaLN)"]
             Ada_Cond -.->|Modulate| Norm_1
             Norm_1 --> Self_Attn[Self-Attention]
             Self_Attn --> Add_1((+))
             Block_Input --> Add_1
             
-            Add_1 --> Norm_Cross[Norm (Layernorm)]
+            Add_1 --> Norm_Cross["Norm (Layernorm)"]
             Norm_Cross --> Cross_Attn[Cross-Attention]
             Text_Context -.->|Key/Value| Cross_Attn
             Cross_Attn --> Add_Cross((+))
             Add_1 --> Add_Cross
             
-            Add_Cross --> Norm_2[Norm2 (adaLN)]
+            Add_Cross --> Norm_2["Norm2 (adaLN)"]
             Ada_Cond -.->|Modulate| Norm_2
             Norm_2 --> MLP[MLP]
             MLP --> Add_2((+))
