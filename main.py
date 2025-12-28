@@ -37,18 +37,18 @@ def run_script(script_name, args_dict):
         else:
             cmd += f"--{key} \"{value}\" "
     
-    print(f"\n🚀 Executing: {cmd}\n")
+    print(f"\nExecuting: {cmd}\n")
     try:
         subprocess.run(cmd, shell=True, check=True)
     except subprocess.CalledProcessError:
-        print("\n❌ Execution failed.")
+        print("\nExecution failed.")
     except KeyboardInterrupt:
-        print("\n🛑 Execution interrupted.")
+        print("\nExecution interrupted.")
     
     input("\nPress Enter to return to menu...")
 
 def menu_download():
-    print("\n--- 📥 Download COCO Data ---")
+    print("\n--- Download COCO Data ---")
     target_dir = get_input("Target Directory", DEFAULT_TARGET_DIR)
     split = get_input("Split (test_small/train/val)", "test_small")
     
@@ -58,7 +58,7 @@ def menu_download():
     })
 
 def menu_process():
-    print("\n--- 🔄 Process Data (Images -> Latents) ---")
+    print("\n--- Process Data (Images -> Latents) ---")
     img_dir = get_input("Image Directory", DEFAULT_RAW_DIR)
     ann_file = get_input("Annotation File", DEFAULT_ANN_FILE)
     output_dir = get_input("Output Directory", DEFAULT_DATA_DIR)
@@ -72,7 +72,7 @@ def menu_process():
     })
 
 def menu_train():
-    print("\n--- 🏋️ Train Model ---")
+    print("\n--- Train Model ---")
     data_dir = get_input("Processed Data Directory", DEFAULT_DATA_DIR)
     epochs = get_input("Epochs", "50")
     batch_size = get_input("Batch Size", "32")
@@ -90,7 +90,7 @@ def menu_train():
     })
 
 def menu_sample():
-    print("\n--- 🎨 Generate Image ---")
+    print("\n--- Generate Image ---")
     
     # Checkpoint Selection
     checkpoints = list_checkpoints()
@@ -112,10 +112,10 @@ def menu_sample():
         except:
             ckpt_path = get_input("Enter Checkpoint Path")
     else:
-        print("\n⚠️ No checkpoints found in checkpoints/.")
+        print("\nNo checkpoints found in checkpoints/.")
         ckpt_path = get_input("Enter Checkpoint Path")
 
-    prompt = get_input("📝 Enter Prompt")
+    prompt = get_input("Enter Prompt")
     if not prompt:
         print("Prompt cannot be empty!")
         return
@@ -132,13 +132,13 @@ def main():
     while True:
         clear_screen()
         print("========================================")
-        print("   🧵 SewingSiT Interactive Menu 🧵")
+        print("   SewingSiT Interactive Menu")
         print("========================================")
-        print("1. 📥 Download Data")
-        print("2. 🔄 Process Data")
-        print("3. 🏋️ Train Model")
-        print("4. 🎨 Generate Image (Sample)")
-        print("5. 🚪 Exit")
+        print("1. Download Data")
+        print("2. Process Data")
+        print("3. Train Model")
+        print("4. Generate Image (Sample)")
+        print("5. Exit")
         print("========================================")
         
         choice = input("Select an option (1-5): ").strip()
