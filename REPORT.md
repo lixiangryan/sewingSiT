@@ -34,7 +34,7 @@
 
 ```mermaid
 graph TD
-    subgraph Original_SiT [Original SiT (Class Conditional)]
+    subgraph Original_SiT [Original SiT - Class Conditional]
         direction TB
         Input_Img[Input Image / Latent] --> PatchEmbed
         Class_Label[Class Label y] --> LabelEmb[LabelEmbedder]
@@ -83,7 +83,7 @@ graph TD
         
         Input_Latent[Noisy Latent] --> VAE_Enc
         
-        subgraph Backbone [Diffusion Backbone (UNet/Transformer)]
+        subgraph Backbone [Diffusion Backbone - UNet or Transformer]
             direction TB
             Layer_In --> SA[Self-Attention]
             SA --> CA[Cross-Attention]
@@ -103,7 +103,7 @@ SewingSiT 是我們將上述兩者結合的成果。我們移除了 `LabelEmbedd
 
 ```mermaid
 graph TD
-    subgraph Sewing_SiT [SewingSiT (Text Conditional)]
+    subgraph Sewing_SiT [SewingSiT - Text Conditional]
         direction TB
         style Sewing_SiT fill:#e1f5fe,stroke:#01579b,stroke-width:2px
         
